@@ -1,0 +1,116 @@
+# 1. BUSINESS UNDERSTANDING
+
+### Specifying the question
+
+A cryptography course is being set up with advertisement being done on a Kenyan entrepreneur's blog. Previously, the same entrepreneur's blog; a similar course was advertised and the data was collected. How can the collected data be used to predict the potential individuals most likely to view the adds.
+
+### Defining the metric of success
+
+The project shall be deemed successful if a correlation of one factor is matched with the probability of clicking. 
+
+### Understanding the context
+
+The individuals that view the blog and may click on the ad.
+
+### Recording the Experimental Design
+
+The following shall be used to analyze the data:
+1. Covariance
+2. Correlation
+
+### Data Relevance
+
+### Appropriateness of the data
+
+
+# 2. DATA AQUISITION AND EXTRACTION, TRANSFORMING AND LOADING
+
+### Loading of the data
+```
+library(data.table)
+dt = fread('http://bit.ly/IPAdvertisingData')
+head(dt, 10)
+```
+### Understanding of the data
+The data types represented are looked at within this section. Data types what are found within the data are put to focus and the first few records are displayed.
+```
+str(dt)
+```
+
+### Outliers
+```
+boxplot(dt[,1])
+boxplot(dt[,2])
+boxplot(dt[,3])
+boxplot(dt[,4])
+```
+
+### Anomalies
+From the reading of the data, it can be noted that there are two anomalies within the data types of the dataset. The first being column Male is represented as an integer instead of as a logical data type (Boolean). This same issue happens with the column 'Clicked on Ad'.
+
+```
+for (c in names(dt))
+  cat(c , '\t\t\t'  , class(dt[[c]]) , '\n')
+```
+
+```
+unique(dt$Male)
+```
+```
+unique(dt[['Clicked on Ad']])
+```
+
+```
+dt$Female = dt$Male == 0
+dt$Clicked = dt[['Clicked on Ad']] == 1
+```
+
+```
+#dr = c('Male','Clicked on Ad')
+dt <- dt[,!"Clicked on Ad"]
+dt <- dt[,!"Male"]
+```
+
+### Missing data 
+```
+colSums(is.na(dt))
+```
+From the above we can note that there are no missing data in the dataset.
+# 3. EXPLORATORY DATA ANALYSIS
+```
+for (c in names(dt))
+  cat(c , '\t\t\t'  , class(dt[[c]]), '\t\t\t'  , length(unique(dt[[c]])) , '\n')
+```
+
+### Univariate 
+```
+summary(dt)
+```
+### Bivariate
+```
+cor(dt[,1:4])
+
+heatmap(cor(dt[,1:4]))
+```
+
+```
+cov(dt[,1:4])
+
+heatmap(cov(dt[,1:4]))
+```
+
+```
+plot(dt[['Daily Time Spent on Site']], dt[['Daily Internet Usage']], xlab="Daily Time Spent on Site", ylab="Daily Internet Usage")
+
+```
+
+```
+plot(dt[['Age']], dt[['Daily Internet Usage']], xlab="Age", ylab="Daily Internet Usage")
+```
+### Multivariate
+
+# 4. Insights
+
+# 5. Conclusion
+
+# 6. Recommendation
