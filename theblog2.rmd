@@ -1,0 +1,115 @@
+# 1. BUSINESS UNDERSTANDING
+## a. Defining the question
+A cryptography course is being set up with advertisement being done on a Kenyan entrepreneur's blog. Previously, the same entrepreneur's blog; a similar course was advertised and the data was collected. How can the collected data be used to predict the potential individuals most likely to view the adds.
+
+## b. Defining the metric of success
+
+The project shall be deemed successful if a correlation of one factor is matched with the probability of clicking. 
+
+## c. Understading the context
+## d. Recording the experimental design
+
+The following shall be used to analyze the data:
+1. CoVariance
+2. Correlation
+3. Measures of central tendency
+4. Visualization of the data
+
+## e. Data Relevance
+## f. Appropriateness of the data
+# 2. DATA AQUISITION AND EXTRACTION, TRANSFORMING AND LOADING
+## a. Importing of the libraries
+```{r}
+library(data.table)
+```
+### Reading the data
+```{r}
+library(data.table)
+dt = fread('http://bit.ly/IPAdvertisingData')
+```
+
+```{r}
+head(dt, 10)
+```
+
+```{r}
+tail(dt, 10)
+```
+### Understanding of the data
+```{r}
+dim(dt)
+```
+```{r}
+summary(dt)
+```
+
+```{r}
+columnnames <- colnames(dt)
+columntypes <- c()
+noofunique <- c()
+for (y in columnnames){
+  columntypes <- c(columntypes , class(dt[[y]]))
+  noofunique <- c(noofunique, length(unique(dt[[y]])))
+}
+desc <- data.frame('Column Names' = columnnames , 'Column Types' = columntypes , 'Number of Unique' = noofunique)
+desc
+```
+
+### Anomalies
+```{r}
+summary(dt)
+```
+```{r}
+dt$Male <- as.factor(dt$Male)
+dt[['Clicked on Ad']] <- as.factor(dt[['Clicked on Ad']])
+```
+### Outliers
+```{r}
+columnnames <- colnames(dt)
+columntypes <- c()
+noofunique <- c()
+for (y in columnnames){
+  columntypes <- c(columntypes , class(dt[[y]]))
+  noofunique <- c(noofunique, length(unique(dt[[y]])))
+}
+desc <- data.frame('Column Names' = columnnames , 'Column Types' = columntypes , 'Number of Unique' = noofunique)
+desc
+```
+
+```{r}
+cv <- desc[desc$Column.Types == 'integer' | desc$Column.Types == 'numeric',]
+numericalcolumns <- cv[['Column.Names']]
+for (we in numericalcolumns){
+  boxplot(dt[[we]], main = we)
+}
+```
+### Missing data 
+```{r}
+colSums(is.na(dt))
+```
+```{r}
+dt <- na.omit(dt)
+```
+### Duplicated data
+```{r}
+dt <- unique(dt)
+```
+# 3. EXPLORATORY DATA ANALYSIS
+### Univariate 
+```{r}
+centr <- data.frame(
+	'Mean' = apply(dt[, ..numericalcolumns] , 2 , mean),
+	'Median' = apply(dt[, ..numericalcolumns], 2 , median),
+	#Mode = apply(dt[,1:4], 2 , mode),
+	'Maximum' = apply(dt[, ..numericalcolumns], 2 , max),
+	'Minimum' = apply(dt[, ..numericalcolumns], 2 , min),
+	'Standard Deviation' = apply(dt[, ..numericalcolumns], 2 , sd),
+	'Variance' = apply(dt[, ..numericalcolumns], 2 , var)
+	)
+centr
+```
+### Bivariate
+### Multivariate
+# 4. Insights
+# 5. Conclusion
+# 6. Recommendation
